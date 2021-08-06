@@ -18,8 +18,8 @@ Retrieves all ingredients with Foodon IDs and Alternate Names.
 ### Response schema 
 ```
 [
-	ingredient: string,
-	foodon_ids: array,
+    ingredient: string,
+    foodon_ids: array,
     alternate_names: array
 ]
 ```
@@ -44,7 +44,7 @@ Retrieves ingredient data from name.
 ### Response schema
 ```
 {
-	ingredient: string,
+    ingredient: string,
     ghg: float
 }
 ```
@@ -58,11 +58,11 @@ Retrieves portion data of an ingredient from name.
 ### Response schema
 ```
 {
-	ingredient: string,
+    ingredient: string,
     portions: [
     	{
-        	portion: string,
-        	weight: float
+            portion: string,
+            weight: float
         }
     ]
 }
@@ -77,7 +77,7 @@ Retrieves density information from ingredient name.
 ### Response schema
 ```
 {
-	ingredient: string,
+    ingredient: string,
     density: float
 }
 ```
