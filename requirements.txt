@@ -17,3 +17,4 @@ toml==0.10.2
 urllib3==1.26.6
 webencodings==0.5.1
 zipp==3.4.1
+django-rest-swagger==2.2.0
