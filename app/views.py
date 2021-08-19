@@ -103,7 +103,7 @@ def upload(request):
             density_index = fields.index(
                 "Density in g/ml (including mass and bulk density)")
             land_use_index = fields.index("Land Use (Mean)")
-            water_use_index = fields.index("Water (95th)")
+            water_use_index = fields.index(" Water (95th)")
             land_use_change_index = fields.index("LUC")
             feed_index = fields.index("Feed")
             farm_index = fields.index("Farm")
@@ -148,7 +148,6 @@ def upload(request):
                     land_use = fields[land_use_index]
                     water_use = fields[water_use_index]
                     land_use_change = fields[land_use_change_index]
-                    print(land_use_change, isfloat(land_use_change))
                     if not isfloat(land_use_change):
                         land_use_change = 0
                     feed = fields[feed_index]
