@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from app.models import MasterData, PortionData, AlternateName, FoodonId, ReferenceData
+from app.models import MasterData, PortionData, AlternateName, FoodonId, ReferenceData, SeasonalityData
 from app.serializers import MasterDataSerializer, PortionDataSerializer, AlternateNameSerializer, FoodonIdSerializer, ReferenceDataSerializer
 from datetime import datetime
 # Create your views here.
@@ -53,19 +53,14 @@ def ingredient_data(request):
         except ObjectDoesNotExist:
             ingredient_name = AlternateName.objects.get(alternate_name=name)
             master_object = ingredient_name.food_id
+        current_month = datetime.now().month
+        reference_data = master_object.best_match_id
         try:
-            current_month = datetime.now().month
-            reference_data = master_object.best_match_id
-            # TODO: add seasonality multiplier here
-            # season_info = SeasonalityData.objects.filter(
-                # food_id=master_object.id).get(month=current_month)
-            # return Response({"Ingredient": master_object.food_name,
-            #                 "GHG": master_object.ghg,
-            #                 "Season Harvest Data": season_info.harvest,
-            #                 "Season Storage Data": season_info.storage},
-            #                 status=status.HTTP_200_OK)
+            season_info = SeasonalityData.objects.filter(reference_id=reference_data).get(month=current_month)
+            return Response({"ingredient": master_object.food_name, "ghg": season_info.ghg}, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({"ingredient": master_object.food_name, "ghg": master_object.ghg_global}, status=status.HTTP_200_OK)
 
-            return Response({"ingredient": master_object.food_name, "ghg": reference_data.ghg_global}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data={"error": repr(e)}, status=status.HTTP_400_BAD_REQUEST)
 
