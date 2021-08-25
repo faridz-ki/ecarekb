@@ -260,15 +260,17 @@ def upload_seasonality(request):
                 month = 1
                 while month <= 12:
                     offset = (month - 1) * 7
-                    luc = fields[offset + 1]
-                    feed = fields[offset + 2]
-                    farm = fields[offset + 3]
-                    processing = fields[offset + 4]
-                    transport = fields[offset + 5]
-                    packaging = fields[offset + 6]
-                    retail = fields[offset + 7]
+                    luc = float(fields[offset + 1])
+                    feed = float(fields[offset + 2])
+                    farm = float(fields[offset + 3])
+                    processing = float(fields[offset + 4])
+                    transport = float(fields[offset + 5])
+                    packaging = float(fields[offset + 6])
+                    retail = float(fields[offset + 7])
 
-                    entry = SeasonalityData(food_name=name, land_use_change=luc, feed=feed, farm=farm, processing=processing, transport=transport, packaging=packaging, retail=retail, month=month, reference_id=obj)
+                    ghg = luc*obj.land_use_change + feed*obj.feed + farm*obj.farm + processing*obj.processing + transport*obj.transport + packaging*obj.packaging + retail*obj.retail
+
+                    entry = SeasonalityData(food_name=name, land_use_change=luc, feed=feed, farm=farm, processing=processing, transport=transport, packaging=packaging, retail=retail, month=month, reference_id=obj, ghg=ghg)
                     entry.save()
                     month += 1
             except Exception as e:
