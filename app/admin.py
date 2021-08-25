@@ -12,7 +12,8 @@ class MyAdminSite(admin.AdminSite):
         custom_urls = [
             path('upload', self.admin_view(admin_views.upload), name='upload'),
             path('upload_foodon', self.admin_view(admin_views.upload_foodon), name='upload_foodon'),
-            path('upload_portion', self.admin_view(admin_views.upload_portion), name='upload_portion')
+            path('upload_portion', self.admin_view(admin_views.upload_portion), name='upload_portion'),
+            path('upload_seasonality', self.admin_view(admin_views.upload_seasonality), name='upload_seasonality')
         ]
         return custom_urls + urls
         
@@ -32,10 +33,21 @@ class MasterDataAdmin(CustomModelAdmin):
 class PortionDataAdmin(CustomModelAdmin):
     search_fields = ('food_name', 'portion')
 
+class AlternateNameAdmin(CustomModelAdmin):
+    search_fields = ('food_name', 'alternate_name')
+
+class FoodonIdAdmin(CustomModelAdmin):
+    search_fields = ('food_name', 'foodon_id')
+
+class ReferenceDataAdmin(CustomModelAdmin):
+    search_fields = ['food_name']
+
+class SeasonalityDataAdmin(CustomModelAdmin):
+    search_fields = ['food_name']
 
 custom_admin.register(MasterData, MasterDataAdmin)
 custom_admin.register(PortionData, PortionDataAdmin)
-custom_admin.register(AlternateName)
-custom_admin.register(FoodonId)
-custom_admin.register(ReferenceData)
-custom_admin.register(SeasonalityData)
+custom_admin.register(AlternateName, AlternateNameAdmin)
+custom_admin.register(FoodonId, FoodonIdAdmin)
+custom_admin.register(ReferenceData, ReferenceDataAdmin)
+custom_admin.register(SeasonalityData, SeasonalityDataAdmin)

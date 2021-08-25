@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from app.models import MasterData, PortionData, AlternateName, FoodonId, ReferenceData
+from app.models import MasterData, PortionData, AlternateName, FoodonId, ReferenceData, SeasonalityData
 
 def upload_foodon(request):
     if "GET" == request.method:
@@ -233,3 +233,49 @@ def upload_portion(request):
         print(repr(e))
 
     return HttpResponseRedirect(reverse("admin:upload_foodon"))
+
+def upload_seasonality(request):
+    if "GET" == request.method:
+        return render(request, "admin/csv_form.html")
+    # if not GET, then proceed
+    try:
+        SeasonalityData.objects.all().delete()
+
+        csv_file = request.FILES["csv_file"]
+        # if not csv_file.name.endswith('.csv'):
+        #     messages.error(request, 'File is not CSV type')
+        #     return HttpResponseRedirect(reverse("upload"))
+
+        file_data = csv_file.read().decode("utf-8")
+
+        lines = file_data.split("\n")
+        # loop over the lines and save them in db. If error , store as string and then display
+        for x in range(2, len(lines)):
+            fields = lines[x].split("\t")
+            if fields[0] == '':
+                break
+            try:
+                name = fields[0]
+                obj = ReferenceData.objects.get(food_name=name)
+                month = 1
+                while month <= 12:
+                    offset = (month - 1) * 7
+                    luc = fields[offset + 1]
+                    feed = fields[offset + 2]
+                    farm = fields[offset + 3]
+                    processing = fields[offset + 4]
+                    transport = fields[offset + 5]
+                    packaging = fields[offset + 6]
+                    retail = fields[offset + 7]
+
+                    entry = SeasonalityData(food_name=name, land_use_change=luc, feed=feed, farm=farm, processing=processing, transport=transport, packaging=packaging, retail=retail, month=month, reference_id=obj)
+                    entry.save()
+                    month += 1
+            except Exception as e:
+                print(x, repr(e))
+                pass
+
+    except Exception as e:
+        print(repr(e))
+
+    return HttpResponseRedirect(reverse("admin:upload_seasonality"))
