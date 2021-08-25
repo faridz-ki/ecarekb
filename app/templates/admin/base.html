@@ -92,6 +92,10 @@
             {{ content }}
           {% endblock %}
           {% block sidebar %}{% endblock %}
+          {% block uploads %}
+          <div class=>
+              <a href="{% url 'admin:upload' %}">Upload CSVs</a>
+          </div>{% endblock %}
           <br class="clear">
         </div>
         <!-- END Content -->
